@@ -8,6 +8,8 @@
   <head>
 	<title>测试</title>
 	
+<link rel="shortcut icon" href="${pageContext.request.contextPath}/static/img/grid.ico">
+	
 <%-- 	
 	
 <!-- 	  <script type="text/javascript">
@@ -41,7 +43,7 @@
 	</style>  -->
 	
 	 --%>
-<%@include file="/WEB-INF/jsp/easyui.jsp"%>
+
 	
   </head>
   
@@ -50,15 +52,14 @@
 <!--   	<div class="easyui-layout" style="width:90%;height:700px;"> -->
 	 	<div data-options="region:'north'"  style="height: 80px; padding: 10px; background-color: #2d3e50;color:#c7c7c7;">
 	 	 	<div style="height:24px;width:400px;border-bottom:1px solid #c4c4c4;font-size:18px;">  
-              The Grid of community street management
+             	社区网格管理系统
             </div>  
 	 	</div>
 		<div data-options="region:'south'"  style="height:50px;">
 			<div class="easyui-panel login-info-panel" title="登录信息" 
 			data-options="doSize:false,style:{position: 'absolute',left:0}">
-				<a>用户：</a>
-                <a id="modifyPassword" href="#"></a>
-                <a href="#springUrl('/logout.htm')">退出</a>
+                <a id="modifyPassword" href="#">${loginUser.userName}</a>
+                <a href="${pageContext.request.contextPath}/login/logout.html">退出</a>
 			</div>
 		
 			<div class="copyright" align="center">Copyright © 2017</div>
@@ -68,10 +69,11 @@
 		<div data-options="region:'west',split:true " title="菜单" style="width:100px;">
 			<div class="easyui-accordion" data-options="fit:true,border:false">
 				<div title="基本管理" style="padding:10px;">
-					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('网格管理', '/basic/grid')">网格管理</a>
+					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('网格管理', '/announcement/grid')">网格管理</a>
 					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('人员管理', '/SiteInfo/Index')">人员管理</a>
 					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('机构管理', '/SiteInfo/Index')">机构管理</a>
 					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('事件类型', '/SiteInfo/Index')">事件类型</a>
+					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('公告管理', '${pageContext.request.contextPath}/announcement/anno')">公告管理</a>
 				</div>
 				<div title="事件管理" style="padding:10px;">	
 					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('事件上报', '${pageContext.request.contextPath}/user/showUser')">事件上报</a>
@@ -90,31 +92,47 @@
 					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('评分统计', '${pageContext.request.contextPath}/statistics/scoreList')">评分统计</a>
 				</div>
 				<div title="系统管理" style="padding:10px">
-					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('用户管理', '/SiteInfo/Index')">用户管理</a>
-					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('用户列表', '/SiteInfo/Index')">用户列表</a>
+					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('用户管理', '')">用户管理</a>
+					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('用户列表', '${pageContext.request.contextPath}/system/userList')">用户列表</a>
 					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('角色管理', '/SiteInfo/Index')">角色管理</a>
 				</div>
 			</div>
 		</div>
-		<div data-options="region:'center',title:'GridSMS'">
+		<div data-options="region:'center',title:'CGM TYS'">
 			<div id="tabs" class="easyui-tabs tabs-body" data-options="fit:true,border:false, plain:true">
-				<div title="主页" style="padding:10px">  
-	                <p>Welcome to The Grid of community street management 1.0</p>  
-	                <table>
+				<div title="公告" style="padding:10px">  
+	                <h3 align="center">Welcome to The Community Grid Managing TY System 1.0</h3>
+	                <h2 align="left">
+	                	<br>${anno.anno }
+	                </h2>
+<%--  
+	              <table>
 	                 <tr>
+	                 <td>编号</td>
 	                 <td>姓名</td>
 	                  <td>密码</td>
+	                  <td>地址</td>
+	                  <td>号码</td>
+	                  <td>创建时间</td>
+	                  <td>创建者</td>
+	                  
 	               </tr>
 	              <c:forEach var="item"   items="${user}">
 	               <tr>
+	               	<td>${item.id}</td>
 	               	<td>${item.userName}</td>
 	               	<td>${item.password}</td>
+	               	<td>${item.address}</td>
+	               	<td>${item.phone}</td>
+	               	<td>${item.createDateStr}</td>
+	               	<td>${item.createUser}</td>
 	               </tr>   
                   </c:forEach>
 	                </table>
 	              	    <div class="age">
 					    <h2>
 					    YYYYYYY
+ --%>
 	                @*<a href="javascript:void(0)" class="easyui-linkbutton" onclick="topCenter('ok')">TopCenter</a>*@  
 	       		</div> 
 	    	</div>
@@ -152,6 +170,8 @@
      };  
      //新增tabs
 	 function AddTab(subtitle, url) {  
+		 var urlsplit= new Array();
+		 urlsplit = url.split("/");
          if (!$('#tabs').tabs('exists', subtitle)) {  
              $('#tabs').tabs('add', {  
                  title: subtitle,  
@@ -163,7 +183,19 @@
                      iconCls:'icon-mini-refresh',
                      handler:function(){
                     	 //刷新页面的方法体
-                         alert('refresh');
+                         //alert('refresh');
+                         var tabPanel = $('#tabs').tabs('getTab', subtitle);
+                       /*   
+                         var ds = tabPanel.panel('options').dialogs;
+                     	 if (!ds) return;
+                     	 for (var i = 0; i < ds.length; i++ ) {
+                     		$(ds[i]).dialog('destroy');
+                     		log('destroy dialog ' + ds[i]);
+                     	 } 
+                       */
+	                 	 tabPanel.panel('refresh');
+                       //destroyTabDialog(tabPanel);
+                       //tabPanel.panel('refresh');
                      }
                  }]
              });  
@@ -179,6 +211,7 @@
           })  
       }  
 	</script>
+	<%@include file="/WEB-INF/jsp/easyui.jsp"%>
   </body>
 
 </html>

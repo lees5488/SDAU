@@ -1,5 +1,7 @@
 package com.cn.sdau.pojo;
 
+import java.util.Date;
+
 import com.cn.sdau.vo.BaseVo;
 
 public class User extends BaseVo{
@@ -15,6 +17,26 @@ public class User extends BaseVo{
     private String password;
 
     private Integer age;
+    
+    private String address;
+    
+    private String phone;
+    
+    private int createUser;
+    
+    private int updateUser;
+    
+    private String createUserStr;
+    
+    private String updateUserStr;
+    
+    private Date createDate;
+    
+    private Date updateDate;
+    
+    private String createDateStr;
+    
+    private String updateDateStr;
     
 	private int page;
 	
@@ -67,4 +89,85 @@ public class User extends BaseVo{
 	public void setRows(int rows) {
 		this.rows = rows;
 	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public int getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(int createUser) {
+		this.createUser = createUser;
+	}
+
+	public int getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(int updateUser) {
+		this.updateUser = updateUser;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public String getCreateDateStr() {
+		return createDateStr;
+	}
+
+	public void setCreateDateStr(String createDateStr) {
+		this.createDateStr = createDateStr;
+	}
+
+	public String getUpdateDateStr() {
+		return updateDateStr;
+	}
+
+	public void setUpdateDateStr(String updateDateStr) {
+		this.updateDateStr = updateDateStr;
+	}
+
+	public String getCreateUserStr() {
+		return createUserStr;
+	}
+
+	public void setCreateUserStr(String createUserStr) {
+		this.createUserStr = createUserStr;
+	}
+
+	public String getUpdateUserStr() {
+		return updateUserStr;
+	}
+
+	public void setUpdateUserStr(String updateUserStr) {
+		this.updateUserStr = updateUserStr;
+	}
+	
 }

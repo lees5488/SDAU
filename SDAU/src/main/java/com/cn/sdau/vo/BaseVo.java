@@ -14,6 +14,10 @@ public class BaseVo implements Serializable {
 
 	private String sqlDateTimeFormat = "%Y-%m-%d %H:%i:%S";
 	
+	private int offset;
+	
+	private int limit;
+	
 	public String getSqlDateFormat() {
 		return sqlDateFormat;
 	}
@@ -28,6 +32,22 @@ public class BaseVo implements Serializable {
 
 	public void setSqlDateTimeFormat(String sqlDateTimeFormat) {
 		this.sqlDateTimeFormat = sqlDateTimeFormat;
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
 	}
 
 

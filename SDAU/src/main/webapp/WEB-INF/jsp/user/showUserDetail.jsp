@@ -9,19 +9,21 @@
   }
   </script> -->
   <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/user/showUser.js"></script>
+  
+  <%-- 
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/default/easyui.css">
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/icon.css">
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/jquery-easyui-1.5.1/demo/demo.css">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/static/jquery-easyui-1.5.1/jquery.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/static/jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/static/jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
+	 --%>
+	
   </head>
   
   <body>
   <div class="easyui-panel" style="padding:5px;width:'auto'" data-options="fit:true,border:false">
  	 <div class="easyui-panel func-btn-panel" style="padding:5px;" data-options="doSize:false">
-        <a id="${pageId}BtnQuery" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
-        <a id="${pageId}BtnPrint" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-print'" >新增</a>
     </div>
   	<div class="spacing"></div>
   	 <div class="easyui-panel" title="主表信息">
@@ -54,16 +56,13 @@
                     <td>
 						<input type="text" id="${pageId}sumQty" data-options="min:0,precision:0"  readonly="readonly" class="easyui-numberbox" value="$!{dispatchInfo.sumQty}" id="${pageId}sumQty" >
 					</td>
-                    <td>运费合计</td>
-                    <td>
-						<input type="text" id="${pageId}feeCount" data-options="max:getMax(20,6)"   #if(!$canModify)readonly="readonly"#end class="easyui-numberbox detail-value-input midText" value="$!{dispatchInfo.feeCount}" id="${pageId}feeCount" name="feeCount">
-					</td>
                  </tr>
             </tbody>
         </table>
     </div>
 
 </div>
-  </body>
+
+</body>
 
 </html>

@@ -398,9 +398,10 @@ $.requestJson = function(uri,param, okCallback, failCallback, lockScreen){
 				unlockBody();
 			}
 			log(jqXHR.status + '-' + textStatus + '-' + errorThrown);
-			$.showMessage('E000000200', null, function(){
+			$.messager.alert('错误','未知的错误发生了', 'error');
+		//	$.showMessage('E000000200', null, function(){
 //			$.showMessage('E000000200' + '-' + jqXHR.status + '-' + textStatus + '-' + errorThrown, null, function(){
-			});
+	//		});
 		}
 	});
 };
@@ -1663,3 +1664,403 @@ function dateFormatter(date,dataFormate){
 	 }
 	 return date;
 }
+
+
+////////////////////Extension ///////////////////////
+
+//datagrid扩展方法
+$.extend($.fn.datagrid.methods, {
+	// 编辑单元格
+    editCell: function(jq,param){
+        return jq.each(function(){
+            var editcol = $(this).datagrid('getColumnOption', param.field);
+        	if(!editcol.editor){
+                $(this).datagrid('options').editIndex = undefined;
+                $(this).datagrid('options').editField = undefined;
+        		return;
+        	}
+            var fields = $(this).datagrid('getColumnFields',true).concat($(this).datagrid('getColumnFields'));
+            for(var i=0; i<fields.length; i++){
+                var col = $(this).datagrid('getColumnOption', fields[i]);
+                col.editor1 = col.editor;
+                if (fields[i] != param.field){
+                    col.editor = null;
+                }
+            }
+            $(this).datagrid('selectRow', param.index).datagrid('beginEdit', param.index);
+            
+            for(var i=0; i<fields.length; i++){
+                var col = $(this).datagrid('getColumnOption', fields[i]);
+                col.editor = col.editor1;
+            }
+            
+            $(this).datagrid('options').editIndex = param.index;
+            $(this).datagrid('options').editField = param.field;
+            
+            var ed = $(this).datagrid('getEditor', param);
+            if(ed != null) {
+            	if($(ed.target).hasClass('datagrid-editable-input')){
+            		$(ed.target).focus();
+            	}
+            }
+        });
+    },
+    // 判断当前是否可以正确的结束【单元格】的编辑状态，可以将结束编辑
+    isEndCellEditing:function(jq){
+    	var editIndex = jq.datagrid('options').editIndex;
+    	var editField = jq.datagrid('options').editField;
+        if (editIndex == undefined || editField == undefined){
+        	return true;
+        }
+        if (jq.datagrid('exValidateRow',editIndex)){
+    		var oldData = jq.datagrid('getRows')[editIndex][editField];
+
+    		var ed = jq.datagrid('getEditor', {index:editIndex,field:editField});
+    		if(ed){
+    			if($(ed.target).hasClass('combogrid-f')){
+    				// 将datagrid数据存到column option，避免丢失
+		            var co = jq.datagrid('getColumnOption', editField);
+		            var cmbData = $(ed.target).combogrid('grid').datagrid('getSelected');
+		    		co.editor.options.data = [cmbData];
+    			}
+    		}
+    		
+        	jq.datagrid('endEdit', editIndex);
+        	if(jq.datagrid('options').onEndCellEdit){
+        		jq.datagrid('options').onEndCellEdit.call(jq, editIndex, editField, oldData);
+        	}
+        	jq.datagrid('unselectRow', editIndex);
+        	jq.datagrid('options').editIndex = undefined;
+        	jq.datagrid('options').editField = undefined;
+            return true;
+        } else {
+            return false;
+        }
+    },
+    // 判断当前是否可以正确的结束【行】的编辑状态，可以将结束编辑
+    isEndRowEditing:function(jq){
+    	var editIndex = jq.datagrid('getEditingRowIndex');
+    	if (editIndex == undefined){
+//        	jq.datagrid('unselectAll');
+    		return true;
+		}
+    	
+        if (jq.datagrid('exValidateRow', editIndex)){
+        	var editors = jq.datagrid('getEditors', editIndex);
+        	var rowData = jq.datagrid('getRows')[editIndex];
+        	for(var i = 0; i < editors.length; i++){
+        		var ed = editors[i];
+        		if(ed.type == "combobox"){
+    				// 将combobox的text值放到row data里面
+        			var textField = $(ed.target).combobox('options').textField;
+        			rowData[textField] = $(ed.target).combobox('getText');
+        		}else if(ed.type == "combogrid"){
+    				// 将datagrid数据存到column option，避免丢失
+		            var co = jq.datagrid('getColumnOption', ed.field);
+		            var cmbData = $(ed.target).combogrid('grid').datagrid('getSelected');
+		    		co.editor.options.data = [cmbData];
+    			}
+        	}
+        	
+        	jq.datagrid('exEndEdit', editIndex).datagrid('setEditingRowIndex', undefined);
+            return true;
+        } else {
+    		jq.datagrid('unselectAll').datagrid('selectRow', editIndex);
+            return false;
+        }
+    },
+    // 获取编辑中的单元格参数
+    getEditingCell:function(jq){
+    	var editIndex = jq.datagrid('options').editIndex;
+    	var editField = jq.datagrid('options').editField;
+    	return {index:editIndex, field:editField};
+    },
+    // 获取当前编辑行index
+    getEditingRowIndex:function(jq){
+    	return jq.datagrid('options').editIndex;
+    },
+    // 设置当前编辑行index
+    setEditingRowIndex:function(jq, index){
+    	jq.datagrid('options').editIndex = index;
+    	return jq;
+    },
+    // 自定义的开始编辑行方法，集成选中、设定EditingRowIndex flag、开始编辑。
+    // 参数可以是row的index，自动将第一个编辑框获得焦点；
+    // 也可以是options（{index,field}），自动将传入的cell坐标编辑框获得焦点，如果该cell坐标编辑框不支持输入则将第一个编辑框获得焦点；
+    exBeginEditRow:function(jq, p){
+    	var index = $.isNumeric(p) ? p : p.index;
+    	var option = jq.datagrid('options');
+    	if(option.exBeforeEdit!=undefined){
+    		option.exBeforeEdit.call(jq[0],index);
+    	}
+    	jq.datagrid('unselectAll')
+    		.datagrid('selectRow', index)
+		   	 .datagrid('setEditingRowIndex', index)
+		   	 .datagrid('beginEdit', index);
+		
+ 		function focusEditor(ed){
+			var focusInput = null;
+	    		if(ed.type.indexOf('combo') == 0 || ed.type == 'datebox'){
+	    			focusInput = $(ed.target).combo('textbox');
+	    		}else if(ed.type == 'searchbox'){
+	    			focusInput = $(ed.target).searchbox('textbox');
+	    		}else if(ed.type != 'label'){
+	    			focusInput = $(ed.target);
+	    		}
+	    		if(focusInput){
+					focusInput.focus();
+					if(jq.datagrid('options').keyEdit){
+						focusInput.select();
+					}
+					return true;
+	    		}
+	    		return false;
+ 		}
+ 		
+ 		// 选中指定cell
+	   	if(typeof p == 'object'){
+	   		var ed = jq.datagrid('getEditor',p);
+	   		if(focusEditor(ed)){
+	   			return jq;
+	   		}
+	   	}
+ 		
+ 		if(_lastClickTarget){
+ 			var field = null;
+ 			if($(_lastClickTarget).hasClass('datagrid-cell')){
+ 				field = $(_lastClickTarget).parent().attr('field');
+ 			}else if($(_lastClickTarget).is('td')){
+ 				field = $(_lastClickTarget).attr('field');
+ 			}
+ 			if(field != null){
+ 				var ed = jq.datagrid('getEditor',{'index':p,'field':field});
+ 				if(ed!=null&&focusEditor(ed)){
+ 					return jq;
+ 				}
+ 			}
+ 			// 第一个输入框获得焦点
+ 			var editors = jq.datagrid('getEditors', index);
+ 			for(var i = 0,len = editors.length; i < len; i++){
+ 				var ed = editors[i];
+ 				if(focusEditor(ed)){
+ 					return jq;
+ 				}
+ 			}
+ 		}
+        return jq;
+    },
+    exEndEdit:function(jq, index){
+    	jq.datagrid('endEdit', index);
+    	var tr=jq.datagrid("options").finder.getTr(jq[0],index);
+    	var ck=tr.find("div.datagrid-cell-check input[type=checkbox]");
+    	if(ck.is(':checked')){
+    		tr.addClass("datagrid-row-checked");
+    	}
+    	return jq;
+    },
+    // 追加一行可编辑的空行
+    appendEditRow:function(jq, data){
+    	// 判断是否正在编辑的cell能不能正常结束
+        if (jq.datagrid('isEndRowEditing')){
+        	var rdata = $.extend({}, data);
+        	jq.datagrid('appendRow',rdata);
+	    	index = jq.datagrid('getRows').length-1;
+	    	jq.datagrid('exBeginEditRow', index);
+        }
+        return jq;
+    },
+    // 删除checkbox勾中的行，在rowData中设置一个属性deleteFlag=true，表示该数据是被删除的。默认不弹确认框，需弹窗参数设置为true，弹窗需要回调设参数设置为回调方法
+    deleteCheckedRows:function(jq, p){
+    	var checkedRows = jq.datagrid('getChecked');
+    	if(checkedRows.length == 0){
+    		// 没选中任何数据
+    		$.showMessage('W000000001', ['记录']);
+    		return jq;
+    	}
+    	
+    	function del(){
+    		var editIndex = jq.datagrid('getEditingRowIndex');
+    		var editRow = jq.datagrid('getRows')[editIndex];
+	    	$.each(checkedRows, function(){
+		    	var delIndex = jq.datagrid('getRowIndex', this);
+	    		if(editIndex == delIndex){
+	    			// 编辑中的row取消掉。
+	    			jq.datagrid('cancelEdit', delIndex).datagrid('setEditingRowIndex', undefined);
+	    			editRow = null;
+	    		}
+	    		jq.datagrid('deleteRow', delIndex);
+	    		this['deleteFlag'] = true;
+	    	});
+	    	if(editRow){
+    			jq.datagrid('setEditingRowIndex', jq.datagrid('getRowIndex', editRow));
+	    	}
+    	};
+    	
+    	if(p){
+    		// 确认
+    		$.showMessage('Q000000001', null, function(r){
+    			if(!r)return;
+    			del();
+    			if($.isFunction(p)){
+    				p();
+    			}
+    		});
+    	}else{
+    		del();
+    	}
+		return jq;
+    },
+    // 清空grid
+    clearGrid:function(jq){
+    	var rows = jq.datagrid('getRows');
+    	for(var i=rows.length-1; i>= 0; i--){
+    		rows[i]['deleteFlag'] = true;
+    		jq.datagrid('deleteRow',i);
+    	}
+    	return jq;
+    },
+    // exUpdateRow 在原来的updateRow的基础上，将该行添加到updateRows，使其能用getChanges方法获取得到
+    exUpdateRow:function(jq, param){
+    	jq.datagrid('updateRow', param);
+    	var row = jq.datagrid('getRows')[param.index];
+    	var updatedRows=$.data(jq[0],"datagrid").updatedRows;
+    	var insertedRows=$.data(jq[0],"datagrid").insertedRows;
+
+    	var exist = false;
+		for(var i=0,len=insertedRows.length;i<len;i++){
+			if(insertedRows[i] == row){
+				exist = true;
+				break;
+			}
+		}
+		for(var i=0,len=updatedRows.length;i<len;i++){
+			if(updatedRows[i] == row){
+				exist = true;
+				break;
+			}
+		}
+    	if(!exist){
+    		updatedRows.push(row);
+    	}
+		
+    	return jq;
+    },
+    // 扩展的编辑行验证方法，从easyui source中copy的，追加了第一个不合格的输入元素获得焦点的代码
+    exValidateRow:function(jq, index){
+    	var tr=jq.datagrid("options").finder.getTr(jq[0],index);
+    	if(!tr.hasClass("datagrid-row-editing")){
+    	return true;
+    	}
+    	var vbox=tr.find(".validatebox-text");
+    	vbox.validatebox("validate");
+    	vbox.trigger("mouseleave");
+    	var invalid=tr.find(".validatebox-invalid");
+    	if(invalid.length > 0){
+    		invalid[0].focus();
+    		return false;
+    	}
+    	return true;
+    },
+    // 高亮单行
+    exHighlightSingleRow:function(jq, index){
+    	$.each(jq, function(){
+        	var oldHlRow = $(this).datagrid('options').exHighlightSingleRowIdx;
+        	if(oldHlRow != index){
+        		$(this).datagrid("options").finder.getTr(this,oldHlRow).removeClass('ex-datagrid-highlight');
+        		$(this).datagrid("options").finder.getTr(this,index).addClass('ex-datagrid-highlight');
+        		
+        		$(this).datagrid('options').exHighlightSingleRowIdx = index;
+        	}
+    	});
+    	return jq;
+    },
+    // 获取高亮单index
+    exGetHighlightSingleRow:function(jq){
+    	return jq.datagrid('options').exHighlightSingleRowIdx;
+    },
+    // 编辑单元格：损溢画面和盘点画面用的
+    exEditCellForProfitLoss: function(jq,param){
+        return jq.each(function(){
+            var editcol = $(this).datagrid('getColumnOption', param.field);
+        	if(!editcol.editor){
+                $(this).datagrid('options').editIndex = undefined;
+                $(this).datagrid('options').editField = undefined;
+        		return;
+        	}
+            var fields = $(this).datagrid('getColumnFields',true).concat($(this).datagrid('getColumnFields'));
+            for(var i=0; i<fields.length; i++){
+                var col = $(this).datagrid('getColumnOption', fields[i]);
+                col.editor1 = col.editor;
+               
+                if (fields[i] != 'mode' 
+                	&& fields[i] != 'profitLossQty'
+                	&& fields[i] != 'stockQty'
+                	&& fields[i] != 'stocktakeQty'
+                	&& fields[i] != 'differenceQty'
+                	&& fields[i] != 'onHandQty'
+                	&& fields[i] != 'remark'){
+                    col.editor = null;
+                }
+            }
+            $(this).datagrid('selectRow', param.index).datagrid('beginEdit', param.index);
+            
+            for(var i=0; i<fields.length; i++){
+                var col = $(this).datagrid('getColumnOption', fields[i]);
+                col.editor = col.editor1;
+            }
+            
+            $(this).datagrid('options').editIndex = param.index;
+            $(this).datagrid('options').editField = param.field;
+            
+            var ed = $(this).datagrid('getEditor', param);
+            if(ed != null) {
+            	if($(ed.target).hasClass('datagrid-editable-input')){
+            		$(ed.target).focus();
+            	}
+            }
+        });
+    },
+	// 设置表头chekbox勾选状态
+	setHeadCheckboxChecked:function(jq, param){
+    	$.each(jq, function(){
+    		var dc = $.data(this,"datagrid").dc;
+    		dc.header1.find("input[type=checkbox]").attr('checked',param);
+    		dc.header2.find("input[type=checkbox]").attr('checked',param);
+    	});
+    	return jq;
+	}
+});
+
+
+function getContextPath() {
+    var pathName = document.location.pathname;
+    var index = pathName.substr(1).indexOf("/");
+    var result = pathName.substr(0,index+1);
+    return result;
+}
+
+//自定义验证手机号码
+/*$.extend($.fn.validatebox.defaults.rules, {
+phoneRex: {
+  validator: function(value){
+  var rex=/^1[3-8]+\d{9}$/;
+  //var rex=/^(([0\+]\d{2,3}-)?(0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/;
+  //区号：前面一个0，后面跟2-3位数字 ： 0\d{2,3}
+  //电话号码：7-8位数字： \d{7,8
+  //分机号：一般都是3位数字： \d{3,}
+   //这样连接起来就是验证电话的正则表达式了：/^((0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/		 
+  var rex2=/^((0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/;
+  if(rex.test(value)||rex2.test(value))
+  {
+    // alert('t'+value);
+    return true;
+  }else
+  {
+   //alert('false '+value);
+     return false;
+  }
+    
+  },
+  message: '请输入正确电话或手机格式'
+}
+});*/
