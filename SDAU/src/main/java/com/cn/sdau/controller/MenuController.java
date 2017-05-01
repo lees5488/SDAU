@@ -20,7 +20,7 @@ import com.cn.sdau.basic.DataGrid;
 import com.cn.sdau.basic.Json;
 import com.cn.sdau.basic.PageHelper;
 import com.cn.sdau.basic.SysMenu;
-import com.cn.sdau.service.MenuService;
+import com.cn.sdau.service.IMenuService;
 import com.cn.sdau.service.impl.MenuServiceImpl;
 
 

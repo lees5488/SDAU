@@ -23,11 +23,11 @@ function click2(){
 	}
 });
 */
-
+/*
 $('#showTable').datagrid({
 	url:'user/showUser',
 	OnBeforeLoad:function(param){
 		var queryData = $('#SearchForm').serializeObject();
 		param = $.extend(param,queryData);
 	}
-});
+});*/

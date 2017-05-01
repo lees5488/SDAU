@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import com.cn.sdau.basic.PageHelper;
 import com.cn.sdau.basic.SysMenu;
 import com.cn.sdau.dao.MenuMapper;
-import com.cn.sdau.service.MenuService;
+import com.cn.sdau.service.IMenuService;
 
 @Service
-public class MenuServiceImpl implements MenuService{
+public class MenuServiceImpl implements IMenuService{
 	
 	@Resource
 	private MenuMapper menuMapper;

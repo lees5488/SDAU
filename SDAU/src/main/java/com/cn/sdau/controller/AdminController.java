@@ -35,13 +35,15 @@ public class AdminController {
 		return "admin/showUser";
 		//return mav;
 	}
-	
+
+	/**
+	 * 首页
+	 * @param request
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/addUser")
 	public String addUser(HttpServletRequest request,Model model){
-		int userId = 1;
-		if(null != request.getParameter("id")){
-			userId = Integer.parseInt(request.getParameter("id"));
-		}
 		List<User> user = this.userService.selectAll( );
 		model.addAttribute("user", user);
 		return "admin/addUser";
