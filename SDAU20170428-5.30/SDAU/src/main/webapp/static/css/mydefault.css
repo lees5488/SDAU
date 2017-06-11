@@ -1,0 +1,9 @@
+
+th.hyperlink:link {color:#ff0000;}
+th.hyperlink:visited {color:#0000ff;}
+th.hyperlink:hover {font-size:150%;}
+
+
+input[readonly],input[readonly="readonly"]{
+	background-color: #E2E2E2;
+}
