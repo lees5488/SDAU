@@ -11,7 +11,7 @@ import com.cn.sdau.basic.SysMenu;
 import com.cn.sdau.dao.MenuMapper;
 import com.cn.sdau.service.IMenuService;
 
-@Service
+@Service("")
 public class MenuServiceImpl implements IMenuService{
 	
 	@Resource

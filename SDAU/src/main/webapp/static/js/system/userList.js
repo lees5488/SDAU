@@ -35,7 +35,7 @@ $('#userListBtnDelete').click(function() {
 		return;
 	}
 	// 确认删除
-	$.messager.confirm('提示', 'Are you confirm this?', function(r) {
+	$.messager.confirm('提示', '确认删除?', function(r) {
 		if (r) {
 			// 定义接受的Array
 			var deleteObj = new Array();

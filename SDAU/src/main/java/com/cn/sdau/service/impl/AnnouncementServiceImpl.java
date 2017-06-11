@@ -1,7 +1,5 @@
 package com.cn.sdau.service.impl;
 
-import java.util.Date;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -40,6 +38,7 @@ public class AnnouncementServiceImpl implements IAnnouncementService {
 		}
 		criteria.andIdEqualTo(1);
 		criteria.andUpdateDateEqualTo(announcement.getUpdateDate()); 
+		//下面创建了两个莫名的example所以不可以实现该方法
 		//example.createCriteria().andIdEqualTo(1); 
 		//example.createCriteria().andUpdateDateEqualTo(anno.getUpdateDate());
 		if (1 == announcementMapper.updateByExampleSelective(anno, example)) {

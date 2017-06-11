@@ -30,37 +30,35 @@
         <table id="${pageId}Header" class="detail-property-table " style="width:100%">
         	<tbody >
                 <tr>
-                    <td>装车单号</td>
-                    <td><input type="text" id="${pageId}DispatchNo" name="dispatchNo" readonly="readonly" class="detail-value-input midText" value="$!{dispatchInfo.dispatchNo}"></td>
-                    <td>司机</td>
-                    <td><input type="text" name="dispatchEmployeeNo" readonly="readonly" class="detail-value-input midText" maxlength="50" value="$!esc.html($!{dispatchInfo.dispatchEmployeeNo})"></td>
-                    <td>派车日期</td>
-                    <td>
-						<input type="text" id="${pageId}dispatchDate" readonly="readonly" class="detail-value-input midText" value="$!dateTimeUtil.format($!{dispatchInfo.dispatchDate})">
-					</td>
-                    <td>装车单状态</td>
-                    <td>
-						<input type="text" id="${pageId}dispatchStatusText" readonly="readonly" class="detail-value-input midText" value="$!{dispatchInfo.dispatchStatusText}">
-					</td>
-                </tr>
+                    <td>事件名称</td>
+                    <td><input type="text" id="${pageId}DispatchNo" name="dispatchNo"  class="detail-value-input midText" value=""></td>
+                   
+				</tr>
+				
                 <tr>
-                    <td>打印状态</td>
+                  	<td>备注</td>
                     <td>
-						<input type="text" id="${pageId}printFlgText" readonly="readonly" class="detail-value-input midText" value="$!{dispatchInfo.printFlgText}">
-					</td>
-                    <td>回车日期</td>
-                    <td>
-						<input type="text" id="${pageId}returnDate" readonly="readonly" class="detail-value-input midText" value="$!dateTimeUtil.format($!{dispatchInfo.returnDate})">
-					</td>
-                    <td>商品合计</td>
-                    <td>
-						<input type="text" id="${pageId}sumQty" data-options="min:0,precision:0"  readonly="readonly" class="easyui-numberbox" value="$!{dispatchInfo.sumQty}" id="${pageId}sumQty" >
+						<input type="text" id="${pageId}dispatchDate"  class="detail-value-input midText" value="">
 					</td>
                  </tr>
+                 <tr>
+                  	<td>创建时间</td>
+                    <td>
+						<input type="text" id="${pageId}dispatchDate" readonly="readonly" class="detail-value-input midText" value="">
+					</td>
+                 </tr>
+                 <tr>
+					<td>事件内容</td>
+                    <td><input type="text" name="dispatchEmployeeNo"  class="detail-value-input midText" maxlength="50" value=""></td>
+                </tr>
             </tbody>
         </table>
-    </div>
-
+				<div class="dialog-bottom-buttons" align="right">
+					<a id="userDetaliBtnSave" href="#" class="easyui-linkbutton"
+						iconCls='icon-save'>保存</a> 
+					<a id="userDetaliBtnQuit" href="#" class="easyui-linkbutton"
+					    iconCls='icon-back'>退出</a>
+				</div>
 </div>
 
 </body>

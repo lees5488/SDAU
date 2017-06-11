@@ -7,9 +7,11 @@ public class Announcement {
 
     private String anno;
 
-    private Date createDate;
+    private String remark;
 
     private Integer createUser;
+
+    private Date createDate;
 
     private Integer updateUser;
 
@@ -33,12 +35,12 @@ public class Announcement {
         this.anno = anno == null ? null : anno.trim();
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
     }
 
     public Integer getCreateUser() {
@@ -47,6 +49,14 @@ public class Announcement {
 
     public void setCreateUser(Integer createUser) {
         this.createUser = createUser;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     public Integer getUpdateUser() {
@@ -72,5 +82,4 @@ public class Announcement {
 	public void setUpdateDateStr(String updateDateStr) {
 		this.updateDateStr = updateDateStr;
 	}
-
 }

@@ -76,9 +76,9 @@
                <!--  <th data-options="checkbox:true"></th> -->
                 
                 <th data-options="field:'id',width:'180',halign:'center',align:'left',sortable:true">事件编号</th>
-                <th data-options="field:'userName',width:'180',halign:'center',align:'left',sortable:true">事件编号</th>
-                <th data-options="field:'password',width:'180',halign:'center',align:'left',sortable:true">事件编号</th>
-                <th data-options="field:'age',width:'180',halign:'center',align:'left',sortable:true">事件编号</th>
+                <th data-options="field:'userName',width:'180',halign:'center',align:'left',sortable:true">事件名称</th>
+                <th data-options="field:'password',width:'180',halign:'center',align:'left',sortable:true">上报日期</th>
+                <th data-options="field:'address',width:'180',halign:'center',align:'left',sortable:true">事件状态</th>
       <!--           
                 <th data-options="field:'id',width:'180',halign:'center',align:'left',sortable:true">事件编号</th>
 				<th data-options="field:'problemName',width:'80',halign:'center',align:'left',sortable:true">事件名称</th>
@@ -96,7 +96,7 @@
   	</table>
 <!--   	<div class="easyui-pagination" data-options=""></div> -->
   </div>
-<div id="showUserDialog" class="easyui-dialog detail-dialog" closed="true"  data-options="width:'1070',height:'569'" title="详细">
+<div id="showUserDialog" class="easyui-dialog detail-dialog" closed="true"  data-options="width:'1070',height:'569'" title="事件上报详细">
 </div>
  <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/user/showUser.js"></script>
 <%--  <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/user/showUser.js"></script>

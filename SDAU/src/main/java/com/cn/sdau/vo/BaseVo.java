@@ -18,6 +18,7 @@ public class BaseVo implements Serializable {
 	
 	private int limit;
 	
+	
 	public String getSqlDateFormat() {
 		return sqlDateFormat;
 	}

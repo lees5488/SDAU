@@ -15,7 +15,7 @@
 <!-- <form id="announcementForm" onSubmit="return check();">
  -->
 
-<textarea rows="30px" cols="100%" name = "anno">${anno.anno }</textarea>
+<textarea rows="23px" cols="100%" name = "anno">${anno.anno }</textarea>
 <input id="updateDate" name = "updateDateStr" data-options="formatter:myformatter,parser:myparser" class="detail-value-input td-date" readonly="readonly" value="${anno.updateDateStr}"  type="hidden"  />
 
 						 
@@ -27,7 +27,7 @@
 
 //保存
 $('#announcementBtnSave').click(function(){
-	debugger;
+//	debugger;
 	//var table = $('#impForecastDetailTable');
 	//var form = $('#impForecastDetailForm');
 	//if (form.form('validate')	// 表单验证，ajaxFormSubmit本身默认已经提供验证的，但是这里明细的内容需要自行验证，为了保证先验证form在这里调用validate，ajaxFormSubmit不再验证
@@ -54,10 +54,11 @@ $('#announcementBtnSave').click(function(){
 		    	//}
 		    },
 		    onSuccess:function(data){
+				$.messager.alert('提示', '公告更新成功！', 'info');
 		    	$.showMessage('保存成功',  [''], function(){
                     var tabPanel = $('#tabs').tabs('getTab', subtitle);
                 	 tabPanel.panel('refresh');
-		    	});
+		    	}); 
 		    }
 		});
 	//};

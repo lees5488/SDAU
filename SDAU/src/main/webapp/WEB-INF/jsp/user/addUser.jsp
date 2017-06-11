@@ -70,8 +70,8 @@
 			<div class="easyui-accordion" data-options="fit:true,border:false">
 				<div title="基本管理" style="padding:10px;">
 					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('网格管理', '/announcement/grid')">网格管理</a>
-					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('人员管理', '/SiteInfo/Index')">人员管理</a>
-					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('部门管理', '/SiteInfo/Index')">部门管理</a>
+					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('人员管理', '${pageContext.request.contextPath}/employeeList/index')">员工管理</a>
+					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('部门管理', '${pageContext.request.contextPath}/department/index')">部门管理</a>
 					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('机构管理', '/SiteInfo/Index')">机构管理</a>
 					<a href="#" class="easyui-linkbutton" onclick="javascript: AddTab('公告管理', '${pageContext.request.contextPath}/announcement/anno')">公告管理</a>
 				</div>
